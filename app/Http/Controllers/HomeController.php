@@ -35,6 +35,6 @@ class HomeController extends Controller
         }
         // $haha = User::find($user_id);
         // dd($haha->student_info->cgpa);
-        return view('home');
+        return view('homess');
     }
 }
