@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\student_info;
 use Illuminate\Http\Request;
 use Auth;
+use App\SkillQuestion;
 
 class StudentInfoController extends Controller
 {
@@ -25,7 +26,8 @@ class StudentInfoController extends Controller
      */
     public function create()
     {
-        return view('personalitytest');
+        $skill_questions = SkillQuestion::all();
+        return view('personalitytest',compact('skill_questions'));
     }
 
     /**
@@ -37,21 +39,23 @@ class StudentInfoController extends Controller
     public function store(Request $request)
     {
         $param = $request->all();
-
+        
         $personalitytest['Openness'] = $param['Openness'];
         $personalitytest['Conscientiousness'] = $param['Conscientiousness'];
         $personalitytest['Extraverted'] = $param['Extraverted'];
         $personalitytest['Agreeableness'] = $param['Agreeableness'];
         $personalitytest['Neuroticism'] = $param['Neuroticism'];
+
+        $jsonskill = json_encode($param['skill'], JSON_FORCE_OBJECT);
         
         $personalityscore = json_encode($personalitytest);
         
-
+        
 
 
         $student_info = new student_info();
         $student_info->personality  = $personalityscore; 
-        $student_info->skill        = 32; 
+        $student_info->skill        = $jsonskill; 
         $student_info->cgpa         = $param['cgpa']; 
         $student_info->user_id      = Auth::user()->id;
         $student_info->save();
